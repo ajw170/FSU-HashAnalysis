@@ -1,0 +1,4 @@
+Andrew J Wood
+COP4531 - Project 1 - Hash Analysis
+
+The project began with the implementation of the
