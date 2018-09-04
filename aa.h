@@ -1,9 +1,7 @@
 /*
-    hashtbl.h
-    Chris Lacher
-    06/20/18
-
-    Copyright 2018, R.C. Lacher
+    aa.h
+    Andrew Wood
+    Hash Table implementation
     
     Defining the classes HashTable <K, D, H>
                          HashTable <K, D, H> :: ConstIterator

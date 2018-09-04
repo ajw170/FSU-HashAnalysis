@@ -1,4 +1,30 @@
 Andrew J Wood
 COP4531 - Project 1 - Hash Analysis
 
-The project began with the implementation of the
+
+
+
+Phase 1: Implementing the first part of Analysis and the Max Bucket Size methods:
+
+I began the project by implementing the Analysis method.  For the most part, the calculations were straightforward
+with the exception of the "actual search time" parameter.
+
+To determine the actual search time, I realized I had to consider that the search time for any given search is given as
+follows:
+
+O(1) + O(size of bucket).
+
+However, to get the "actual" search time, it is necessary to iterate through all the non empty buckets and determine the search
+time for each bucket, given by 1 + (size), summing these values up, and dividing by the number of non-empty buckets.  Actually, the
+search time would be 1 + (average of non-empty bucket sizes).  The "1" is the initial hash and bucket identification.
+
+During development, I had an issue with understanding the type definitions.  When I wanted to compute the max bucket size, I first
+was declaring a List Iterator, which is not what I wanted; in fact is was an FSU Vector iterator that I needed.  Since Vector was
+hardcoded into the aa.h file as a type, we didn't have type definition support for the hash table vector type.
+
+
+
+Phase 2:  Implementing the Actual vs. Theoretical bucket sizes
+
+
+

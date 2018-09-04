@@ -1,1 +1,22 @@
- ** HashTable<K,D,H>::Analysis not implemented
+
+      table size:           1000
+      number of buckets:    997
+      nonempty buckets:     641
+      max bucket size:      4
+      load factor:          1.00
+      expected search time: 2.00
+      actual search time:   2.56
+
+      bucket size distributions
+      -------------------------
+      size       actual         theory (uniform random distribution)
+      ----       ------         ------
+         0          356          365.5
+         1          371          367.0
+         2          197          184.0
+         3           57           61.5
+         4           16           15.4
+         5                         3.1
+         6                         0.5
+         7                         0.1
+

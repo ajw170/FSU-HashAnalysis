@@ -33,7 +33,7 @@
 #include <bitvect.cpp>
 //
 
-// KISS hash function
+/*// KISS hash function
 typedef fsu::String                         KeyType;
 typedef int                                 DataType;
 typedef hashclass::KISS < KeyType >         HashType;
@@ -49,7 +49,7 @@ typedef fsu::Entry < KeyType, DataType >    EntryType;
 const bool prime = 1;
 // */
 
-/* // MM hash function
+ // MM hash function
 typedef fsu::String                         KeyType;
 typedef int                                 DataType;
 typedef hashclass::MM < KeyType >           HashType;
