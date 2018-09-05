@@ -32,7 +32,10 @@ size_t HashTable<K,D,H>::MaxBucketSize () const
 template <typename K, typename D, class H>
 void HashTable<K,D,H>::Analysis (std::ostream& os) const
 {
-  fsu::Vector<size_t> sizeCounter(MaxBucketSize() + 1, 0);
+  //only do the MaxBucketSize calculation once so the function does not have to keep calling it
+  size_t maxBucketSize = MaxBucketSize();
+
+  fsu::Vector<size_t> sizeCounter(maxBucketSize + 1, 0);
 
   // declare column widths
   int width0 = 10, width1 = 13, width2 = 15;
@@ -71,12 +74,11 @@ void HashTable<K,D,H>::Analysis (std::ostream& os) const
   double actualSearchTime = 0;
   actualSearchTime = 1 + static_cast<double>(tableSize) / nonEmptyBuckets;
 
-
   os << "\n";
   os << std::setw(startheader) << ' ' << "table size:" << "           " << tableSize << "\n";
   os << std::setw(startheader) << ' ' << "number of buckets:" << "    " << numBuckets << "\n";
   os << std::setw(startheader) << ' ' << "nonempty buckets:" << "     " << nonEmptyBuckets << "\n";
-  os << std::setw(startheader) << ' ' << "max bucket size:" << "      " << this->MaxBucketSize() << "\n";
+  os << std::setw(startheader) << ' ' << "max bucket size:" << "      " << maxBucketSize << "\n";
   os << std::setw(startheader) << ' ' << "load factor:" << "          " << std::setprecision(2) << std::fixed << loadFactor << "\n";
   os << std::setw(startheader) << ' ' << "expected search time:" << " " << std::setprecision(2) << std::fixed << expectedSearchTime << "\n";
   os << std::setw(startheader) << ' ' << "actual search time:" << "   " << std::setprecision(2) << std::fixed << actualSearchTime << "\n";
@@ -95,10 +97,9 @@ void HashTable<K,D,H>::Analysis (std::ostream& os) const
 
   bool maxActual      = false;
   bool maxTheoretical = false;
-  size_t bucketCounter = 0;
 
   //generate the vector containing the expected bucket numbers with size = table size and initial values of 0.0
-  fsu::Vector<double> expdCount(tableSize + 1, 0.0);
+  fsu::Vector<double> expdCount(maxBucketSize + 1, 0.0);
 
   double numBucketsDecimal = static_cast<double>(numBuckets);
   double tableSizeDecimal = static_cast<double>(tableSize);
@@ -106,43 +107,32 @@ void HashTable<K,D,H>::Analysis (std::ostream& os) const
   expdCount[0] = (numBucketsDecimal - 1) / numBucketsDecimal;
   expdCount[0] = pow(expdCount[0],(tableSizeDecimal - 1));
   expdCount[0] *= (numBucketsDecimal - 1);
-  for (size_t k = 1; k < (1 + tableSize); ++k)
+
+  //only iterate through to value (1 + MaxBucketSize)
+  for (size_t k = 1; k < (1 + maxBucketSize); ++k)
   {
     expdCount[k] = ((tableSizeDecimal - k + 1) / ((numBucketsDecimal - 1) * k)) * expdCount[k-1];
   }
 
-  while ((!maxActual) || (!maxTheoretical))
+  for (size_t bucketCounter = 0; bucketCounter < (maxBucketSize + 1); ++bucketCounter)
   {
-      size_t maxBucketSize = this->MaxBucketSize();
-
-      os << std::setw(width0) << bucketCounter;
-
-        if (bucketCounter < sizeCounter.Size())
-        {
-          os << std::setw(width1) << sizeCounter[bucketCounter];
-        }
-        else
-        {
-          os << std::setw(width1) << ' ';
-        }
-
-         os << std::setw(width2) << std::setprecision(1) << std::fixed << expdCount[bucketCounter] << "\n";
-
-      //check to see if we're reached the stop point
-      if (bucketCounter >= maxBucketSize)
-      {
-          maxActual = true;
-
-          //check to see if the next theoretical value is < 0.05.  If it is, set the flag to true.
-          if (expdCount[bucketCounter + 1] < 0.05)
-          {
-            maxTheoretical = true;
-          }
-      }
-
-      //increment the bucket counter
-      ++bucketCounter;
+    os << std::setw(width0) << bucketCounter;
+    os << std::setw(width1) << sizeCounter[bucketCounter];
+    os << std::setw(width2) << std::setprecision(1) << std::fixed << expdCount[bucketCounter] << "\n";
   }
+
+  //check to see if there are any remaining stray theoretical values that need to be displayed
+  size_t counter = maxBucketSize + 1;
+  double theoryNum = ((tableSizeDecimal - counter + 1) / ((numBucketsDecimal - 1) * counter)) * expdCount[counter-1];
+  while (theoryNum >= 0.05)
+  {
+    os << std::setw(width0) << counter;
+    os << std::setw(width1) << ' ';
+    os << std::setw(width2) << std::setprecision(1) << std::fixed << theoryNum << "\n";
+    ++counter;
+    theoryNum = ((tableSizeDecimal - counter + 1) / ((numBucketsDecimal - 1) * counter)) * theoryNum;
+  }
+
   os << "\n";
 
 } // Analysis

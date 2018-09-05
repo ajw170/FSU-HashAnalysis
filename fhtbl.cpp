@@ -34,7 +34,7 @@
 // */
 
 
-/*// the KISS hash function
+// the KISS hash function
 typedef fsu::String                        KeyType;
 typedef int                                DataType;
 typedef hashclass::KISS < KeyType >        HashType;
@@ -68,7 +68,7 @@ const char* hT = "hashclass::MM <>";
 const bool PRIME = 1;
 // */
 
-// the Simple hash function
+/*// the Simple hash function
 typedef fsu::String                        KeyType;
 typedef int                                DataType;
 typedef hashclass::Simple < KeyType >      HashType;
@@ -95,12 +95,6 @@ template < class C >    void AssignTest ( const C& x1 , std::ostream& os );
 
 int main(int argc, char* argv[])
 {
-  std::cout << "Andrew's Test:";
-  fsu::HashTable<KeyType,DataType> myHashTable;
-  std::cout << "Success!\n";
-
-
-
   bool BATCH = 0;
   bool COLOR = 0;
   if (argc == 2) // com file only
