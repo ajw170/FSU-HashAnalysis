@@ -1,7 +1,7 @@
 /*
     aa.h
     Andrew Wood
-    Hash Table implementation
+    Hash Table implementation for upgraded size
     
     Defining the classes HashTable <K, D, H>
                          HashTable <K, D, H> :: ConstIterator

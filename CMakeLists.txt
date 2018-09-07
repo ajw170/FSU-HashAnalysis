@@ -4,7 +4,6 @@ project(P1_Hash_Analysis)
 set(CMAKE_CXX_STANDARD 14)
 
 set(LIB_DIR "/Users/ajwood/Dropbox/FSU/COP 4531/LIB")
-set(LIB_DIR "/Users/122354/Dropbox/FSU/COP 4531/LIB")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${LIB_DIR}/cpp)
