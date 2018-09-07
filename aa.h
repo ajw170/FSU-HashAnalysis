@@ -1,11 +1,13 @@
 /*
     aa.h
     Andrew Wood
-    Hash Table implementation for upgraded size
-    
-    Defining the classes HashTable <K, D, H>
-                         HashTable <K, D, H> :: ConstIterator
-                         HashTable <K, D, H> :: Iterator
+    9/7/2018
+    version 1.0
+
+    Defines and implements the fsu::HashTable class with the exception of the Analysis() and
+    MaxBucketSize() functions.  For additional information see code comments or refer to log.txt.
+
+    Useful information:
 
     K                    = KeyType
     D                    = DataType

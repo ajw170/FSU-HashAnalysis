@@ -1,15 +1,14 @@
 /*
-    Andrew J Wood - COP4531
-    Hash Analysis
-
     hashtbl.cpp
+    Andrew Wood
+    9/7/2018
+    version 1.0
 
-    Slave file for hashtbl.h
-    Implementing the MaxBucketSize and Analysis methods for HashTable<K,D,H>
-
-    Need to implement these files
-
+    Implements the MaxBucketSize() and Analysis() functions of the aa.h "Associative Array" hash table
+    class.  For additional information see the comments in the code and log.txt.
 */
+
+
 #include <ostream>
 
 template <typename K, typename D, class H>
