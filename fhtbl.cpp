@@ -44,7 +44,7 @@ const char* hT = "hashclass::KISS <>";
 const bool PRIME = 1;
 // */
 
-/* // ModP hash function
+/*// ModP hash function
 typedef fsu::String                        KeyType;
 typedef int                                DataType;
 typedef hashclass::ModP < KeyType >        HashType;

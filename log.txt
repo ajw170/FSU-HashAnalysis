@@ -19,13 +19,70 @@ search time would be 1 + (average of non-empty bucket sizes).  The "1" is the in
 
 During development, I had an issue with understanding the type definitions.  When I wanted to compute the max bucket size, I first
 was declaring a List Iterator, which is not what I wanted; in fact is was an FSU Vector iterator that I needed.  Since Vector was
-hardcoded into the aa.h file as a type, we didn't have type definition support for the hash table vector type.
+hardcoded into the aa.h file as a type, we didn't have type definition support for the hash table vector type.  Resolving this issue was
+a great relief after a bit of frustration.
+
+
+September 3, 2018 10PM-12AM:
+
+I began doing some testing without the bottom portion of the analysis method completed.  This consisted of loading tables of various sizes ranging from
+10 entries to 1,000,000 entries.  The tables were randomly generated using Dr. Lacher's rantable.x method.  I played around by switching hash functions as well
+as mixing and matching the bucket size / # of entries ratio.  To my surpise, the MM, KISS, and ModP hash functions were relatively similar in their performance; load factors
+and expected search times were all pretty good (close to 1.00 and 2-2.5, respectively).  The obvious loser was the Simple hash function, which resulted in buckets
+with large numbers of elements.  I will do more testing once the entire program is complete.
 
 
 September 4, 2018 6PM-12AM
-
 Phase 2:  Implementing the Actual vs. Theoretical bucket sizes:
 
-The
+This phase was fairly straightforward in that I already had the buckets computed from earlier.  I took advantage of the fact that I needed to iterate
+through the buckets to determine which were empty, but while doing so, I saved the size of every bucket into a specially created Vector called sizeCounter.
+This avoided having to iterate through again later in the program and saved valuable performance.
+
+The theoretical distribution was just a matter of implementing the algorithm for expected bucket distributions.
+
+I did not have major issues with this phase of the project, it came down to formatting precision and minor tussles with computign the "extra" theory
+numbers iteratively.  When I switched to the iterative method, the performance increased drastically.
+
+
+September 6, 2018 7PM-12AM
+Phase 3: Upgrading the aa.h file with the required enhancements
+
+The first part was to include the hashclass::KISS as the default hash object argument in the event that a Hash Table is initialized without specifying the
+argument.  This was extremely straighforward and was just a matter of adding the object into the default template parameter.
+
+The bulk of the assignment was to upgrade with the size_ variable which kept track of the table size.  After adding it, I very meticulously combed through the entire
+file to find any locations that the size_ variable would need to be involed.  In the constructors, I ensured it was initialized to 0.  In the copy constructor and the
+assignment operator, I ensured the size_ value was copied to the newly created table.
+
+Other methods that had upgrades included:
+Insert, Remove, Get, and Clear.  There were actually other methods that technically required modifications, but since they relied on other functions already modified
+there was no need to modify them directly (for example, the Put function, which actually just uses a specific version of Get).  It was very important to remember
+that size_ be incremented or decremented when a change to the size actually occurred.  For instance, if the user attempts to insert data into the table with a
+pre-existing key, the data is overwritten but the size of the table does not increase.  It was subtlties like that which made it interesting.
+
+Once this was done I nervously tested the program vigorously using the (!) option after various Puts, Gets, Inserts, Removes, Clear, Rehash, etc.  Basically
+every combination of functions I could come up with using various different bucket sizes and table sizes.  To my pleasant surprise it seemed as if the size_
+was implemented appropriately as it always matched up with the number returned by the iterative method, which basically creates an iterator that
+runs through the entire table and increments a counter as it goes.
+
+
+September 7, 2018
+Final Reckoning
+
+As mentioned previously, I determined that the KISS, ModP, and MM functions performed very well overall, whereas the Simple function did not.
+The reason is rather obvious, as all the Simple hash function does is add the ASCII values of the string and subtract the ascii value for 'a' which
+does not generate sufficient randomness.
+
+I also noticed a difference when using prime vs. non-prime numbers of buckets.  I will state the conclusion first: the number of buckets in a hash table
+should always be a PRIME number.  The reason is that non-prime numbers have numerous multiples, so any number that is a multiple of the bucket number will wind
+up in the same bucket.  For example, when I did 12 buckets, any hash value that is a multiple of 3 went to the third hash bucket, and so on for other values.
+This results in a situation where even if the keys are relatively evenly distributed there will be sufficient overlap in the mod function that average bucket
+size will increase, this increasing load factor which is NOT what we want.  So to reduce collisions, we need to reduce the number of common factors between the # of
+buckets and the keys. Using a prime number is ideal for this, as it has no factors!
+
+Overall I enjoyed this project very much and see the value in hash tables for use in numerous situations.
+
+
 
 
