@@ -1,9 +1,8 @@
 Andrew J Wood
 COP4531 - Project 1 - Hash Analysis
+Experience Log
 
-
-
-
+September 3, 2018, 6-10PM:
 Phase 1: Implementing the first part of Analysis and the Max Bucket Size methods:
 
 I began the project by implementing the Analysis method.  For the most part, the calculations were straightforward
@@ -23,8 +22,10 @@ was declaring a List Iterator, which is not what I wanted; in fact is was an FSU
 hardcoded into the aa.h file as a type, we didn't have type definition support for the hash table vector type.
 
 
+September 4, 2018 6PM-12AM
 
-Phase 2:  Implementing the Actual vs. Theoretical bucket sizes
+Phase 2:  Implementing the Actual vs. Theoretical bucket sizes:
 
+The
 
 

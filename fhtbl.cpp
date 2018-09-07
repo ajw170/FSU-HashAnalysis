@@ -298,6 +298,7 @@ int main(int argc, char* argv[])
             *outptr << "  ** table data read and stored in map\n";
             initited = 0;
             break;
+
           case 'k': case 'K':
             size = 0;
             while (ifs >> key)
@@ -867,6 +868,7 @@ void DisplayMenu(std::ostream& os)
      << "   map.Rehash(numBuckets)  .............................  H numBuckets\n"
      << "   map.Size(), map.NumBuckets()  .......................  s\n"
      << "   map.Size(), map.NumBuckets(), map.MaxBucketSize()  ..  S\n"
+     << "   map.Check()  ........................................  !\n"
      << "   map.Analysis()  .....................................  A\n"
      << "   display Menu   ......................................  M\n"
      << "   switch from batch mode  .............................  X\n"

@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(LIB_DIR "/Users/ajwood/Dropbox/FSU/COP 4531/LIB")
 
+set(COMPILE_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILE_FLAGS}")
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${LIB_DIR}/cpp)
 include_directories(${LIB_DIR}/tcpp)

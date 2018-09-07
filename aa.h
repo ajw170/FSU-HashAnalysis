@@ -133,7 +133,7 @@ namespace fsu
     size_t         NumBuckets    () const;
     size_t         MaxBucketSize () const;
     void           Analysis      (std::ostream& os) const;
-    bool           Check         () const { return 1; }
+    bool           Check         () const;
 
   private:
     // data
@@ -144,6 +144,9 @@ namespace fsu
 
     // private method calculates bucket index
     size_t  Index          (const KeyType& k) const;
+
+    //addition of size element as per specifications
+    size_t size_;
   } ;
 
   //--------------------------------------------
@@ -266,7 +269,26 @@ namespace fsu
   //--------------------------------------------
 
   // Table API
+  //addition of Check method as requested in specifications
+  template <typename K, typename D, class H>
+  bool HashTable<K,D,H>::Check() const
+  {
+    //determine if the size_ variable is consistent with iterative elements
+    size_t counter = 0;
+    ConstIterator i;
+    for (i = this->Begin(); i != this->End(); ++i)
+    {
+      ++counter;
+    }
 
+    std::cout << " ** Table size_          = " << size_ << '\n'
+              << "    total bucket entries = " << counter << '\n';
+
+    return (counter == size_);
+  }
+
+
+  /* Modified with size_ requirement */
   template <typename K, typename D, class H>
   HashTableIterator<K,D,H> HashTable<K,D,H>::Insert (const K& k, const D& d)
   {
@@ -277,9 +299,12 @@ namespace fsu
     typename BucketType::Iterator j  = bucketVector_[i.bucketNum_].Includes(e);
 
     // new version works for all List ADTs
+
     if (j == bucketVector_[i.bucketNum_].End())
     {
+      //element not found, insert the element and increment size_
       j = bucketVector_[i.bucketNum_].Insert(e);
+      ++size_;
     }
     else
     {
@@ -293,7 +318,7 @@ namespace fsu
   void HashTable<K,D,H>::Insert (Iterator i, const K& k, const D& d)
   {
     if (i.Valid() && i.tablePtr_ == this && (*i).key_ == k)
-      // if ((*i).key_ == k)
+      // if ((*i).key_ == k) -- key already exists in table, overwrite data but do not increase size
       (*i).data_ = d;
     else
       Insert(k,d);
@@ -304,13 +329,17 @@ namespace fsu
   {
     EntryType e(k);
     size_t bucketNum_ = Index(k);
-    typename BucketType::Iterator j = bucketVector_[bucketNum_].Includes(e); 
+    typename BucketType::Iterator j = bucketVector_[bucketNum_].Includes(e);
+    //if the element was found
     if (j != bucketVector_[bucketNum_].End())
     {
       if (*j == e)
       {
         bucketVector_[bucketNum_].Remove(j);
+        //decrement the size
+        --size_;
         return 1;
+
       }
     }
     return 0;
@@ -361,7 +390,12 @@ namespace fsu
     size_t bn = Index(key);
     typename BucketType::Iterator i = bucketVector_[bn].Includes(e); 
     if (i == bucketVector_[bn].End())
+    {
       i = bucketVector_[bn].Insert(e);
+      //increment size since element was added
+      ++size_;
+    }
+
     return (*i).data_;
   }
 
@@ -381,7 +415,7 @@ namespace fsu
   void HashTable<K,D,H>::Put (const K& key, const D& data)
   {
     // any of these works:
-    Insert(key,data);
+    Insert(key,data); //if the table size increases, size_ will be incremented in appropriate method
     // Get(key) = data;
     // (*this)[key] = data;
   }
@@ -412,9 +446,11 @@ namespace fsu
 
   // proper type
 
+
+  //the size_ is initialized to 0
   template <typename K, typename D, class H>
   HashTable <K,D,H>::HashTable (size_t n, bool prime)
-    :  numBuckets_(n), bucketVector_(0), hashObject_(), prime_(prime)
+    :  numBuckets_(n), bucketVector_(0), hashObject_(), prime_(prime), size_(0)
   {
     // ensure at least 2 buckets
     if (numBuckets_ < 3)
@@ -426,9 +462,10 @@ namespace fsu
     bucketVector_.SetSize(numBuckets_);
   }
 
+  //the size_ is initialized to 0
   template <typename K, typename D, class H>
   HashTable <K,D,H>::HashTable (size_t n, H hashObject, bool prime)
-    :  numBuckets_(n), bucketVector_(0), hashObject_(hashObject), prime_(prime)
+    :  numBuckets_(n), bucketVector_(0), hashObject_(hashObject), prime_(prime), size_(0)
   {
     // ensure at least 2 buckets
     if (numBuckets_ < 3)
@@ -442,7 +479,7 @@ namespace fsu
 
   template <typename K, typename D, class H>
   HashTable <K,D,H>::HashTable (const HashTable& ht)
-    :  numBuckets_(ht.numBuckets_), bucketVector_(ht.bucketVector_), hashObject_(ht.hashObject_)
+    :  numBuckets_(ht.numBuckets_), bucketVector_(ht.bucketVector_), hashObject_(ht.hashObject_), size_(ht.size_)
   {}
 
   template <typename K, typename D, class H>
@@ -460,6 +497,7 @@ namespace fsu
       bucketVector_ = ht.bucketVector_;
       hashObject_ = ht.hashObject_;
       prime_ = ht.prime_;
+      size_ = ht.size_;
     }
     return *this;
   }
@@ -483,11 +521,13 @@ namespace fsu
     bucketVector_.Swap(newTable.bucketVector_);
   }
 
+  //set size_ to 0
   template <typename K, typename D, class H>
   void HashTable<K,D,H>::Clear ()
   {
     for (size_t i = 0; i < numBuckets_; ++i)
       bucketVector_[i].Clear();
+      size_ = 0;
   }
 
   // Iterator support
@@ -607,10 +647,12 @@ namespace fsu
   template <typename K, typename D, class H>
   size_t HashTable<K,D,H>::Size () const
   {
+    return size_;
+    /*
     size_t size(0);
     for (size_t i = 0; i < numBuckets_; ++i)
       size += bucketVector_[i].Size();
-    return size;
+    return size; */
   }
 
   template <typename K, typename D, class H>

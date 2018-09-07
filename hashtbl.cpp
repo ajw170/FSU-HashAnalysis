@@ -94,10 +94,6 @@ void HashTable<K,D,H>::Analysis (std::ostream& os) const
      << std::setw(width1) << "------"
      << std::setw(width2) << "------" << '\n';
 
-
-  bool maxActual      = false;
-  bool maxTheoretical = false;
-
   //generate the vector containing the expected bucket numbers with size = table size and initial values of 0.0
   fsu::Vector<double> expdCount(maxBucketSize + 1, 0.0);
 
