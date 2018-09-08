@@ -1048,21 +1048,6 @@ namespace fsu
 
   #include <hashtbl.cpp> // implements Analysis and MaxBucketSize methods
 
-  /* // non-functional implementation of Analysis
-  template <typename K, typename D, class H>
-  size_t HashTable<K,D,H>::MaxBucketSize () const
-  {
-    std::cerr << " ** MaxBucketSize not implemented\n";
-    return 0;
-  }
-
-  template <typename K, typename D, class H>
-  void HashTable<K,D,H>::Analysis (std::ostream& os) const
-  {
-    os << " ** Analysis not implemented\n";
-  }
-  // end non-functional */
-
 } // namespace fsu
 
 #endif

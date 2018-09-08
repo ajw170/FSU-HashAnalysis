@@ -31,7 +31,7 @@
 #include <hashfunctions.cpp>
 #include <primes.cpp>
 #include <bitvect.cpp>
-//
+//*/
 
 /*// KISS hash function
 typedef fsu::String                         KeyType;

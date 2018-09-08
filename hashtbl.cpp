@@ -10,26 +10,26 @@
 
 
 #include <ostream>
+#include <aa.h>
 
-template <typename K, typename D, class H>
-size_t HashTable<K,D,H>::MaxBucketSize () const
+template<typename K, typename D, class H>
+size_t HashTable<K, D, H>::MaxBucketSize() const
 {
   size_t max = 0;
 
   typename fsu::Vector<BucketType>::ConstIterator i;
 
   //iterate through the bucketVector_ , determining which lists are not empty
-  for (i = bucketVector_.Begin(); i != bucketVector_.End(); ++i)
-  {
-      if ((*i).Size() > max)
-          max = (*i).Size();
+  for (i = bucketVector_.Begin(); i != bucketVector_.End(); ++i) {
+    if ((*i).Size() > max)
+      max = (*i).Size();
   }
 
   return max;
 }
 
-template <typename K, typename D, class H>
-void HashTable<K,D,H>::Analysis (std::ostream& os) const
+template<typename K, typename D, class H>
+void HashTable<K, D, H>::Analysis(std::ostream &os) const
 {
   //only do the MaxBucketSize calculation once so the function does not have to keep calling it
   size_t maxBucketSize = MaxBucketSize();
@@ -53,14 +53,12 @@ void HashTable<K,D,H>::Analysis (std::ostream& os) const
 
   typename fsu::Vector<BucketType>::ConstIterator i;
   //iterate through the bucketVector_ , determing which lists are not empty
-  for (i = bucketVector_.Begin(); i != bucketVector_.End(); ++i)
-  {
-      if (!(*i).Empty())
-      {
-        ++nonEmptyBuckets;
-      }
-      size_t bucketSize = (*i).Size();
-      ++sizeCounter[bucketSize];
+  for (i = bucketVector_.Begin(); i != bucketVector_.End(); ++i) {
+    if (!(*i).Empty()) {
+      ++nonEmptyBuckets;
+    }
+    size_t bucketSize = (*i).Size();
+    ++sizeCounter[bucketSize];
   }
 
   double loadFactor = 0;
@@ -78,9 +76,12 @@ void HashTable<K,D,H>::Analysis (std::ostream& os) const
   os << std::setw(startheader) << ' ' << "number of buckets:" << "    " << numBuckets << "\n";
   os << std::setw(startheader) << ' ' << "nonempty buckets:" << "     " << nonEmptyBuckets << "\n";
   os << std::setw(startheader) << ' ' << "max bucket size:" << "      " << maxBucketSize << "\n";
-  os << std::setw(startheader) << ' ' << "load factor:" << "          " << std::setprecision(2) << std::fixed << loadFactor << "\n";
-  os << std::setw(startheader) << ' ' << "expected search time:" << " " << std::setprecision(2) << std::fixed << expectedSearchTime << "\n";
-  os << std::setw(startheader) << ' ' << "actual search time:" << "   " << std::setprecision(2) << std::fixed << actualSearchTime << "\n";
+  os << std::setw(startheader) << ' ' << "load factor:" << "          " << std::setprecision(2) << std::fixed
+     << loadFactor << "\n";
+  os << std::setw(startheader) << ' ' << "expected search time:" << " " << std::setprecision(2) << std::fixed
+     << expectedSearchTime << "\n";
+  os << std::setw(startheader) << ' ' << "actual search time:" << "   " << std::setprecision(2) << std::fixed
+     << actualSearchTime << "\n";
   os << "\n";
 
   // details header
@@ -100,17 +101,15 @@ void HashTable<K,D,H>::Analysis (std::ostream& os) const
   double tableSizeDecimal = static_cast<double>(tableSize);
 
   expdCount[0] = (numBucketsDecimal - 1) / numBucketsDecimal;
-  expdCount[0] = pow(expdCount[0],(tableSizeDecimal - 1));
+  expdCount[0] = pow(expdCount[0], (tableSizeDecimal - 1));
   expdCount[0] *= (numBucketsDecimal - 1);
 
   //only iterate through to value (1 + MaxBucketSize)
-  for (size_t k = 1; k < (1 + maxBucketSize); ++k)
-  {
-    expdCount[k] = ((tableSizeDecimal - k + 1) / ((numBucketsDecimal - 1) * k)) * expdCount[k-1];
+  for (size_t k = 1; k < (1 + maxBucketSize); ++k) {
+    expdCount[k] = ((tableSizeDecimal - k + 1) / ((numBucketsDecimal - 1) * k)) * expdCount[k - 1];
   }
 
-  for (size_t bucketCounter = 0; bucketCounter < (maxBucketSize + 1); ++bucketCounter)
-  {
+  for (size_t bucketCounter = 0; bucketCounter < (maxBucketSize + 1); ++bucketCounter) {
     os << std::setw(width0) << bucketCounter;
     os << std::setw(width1) << sizeCounter[bucketCounter];
     os << std::setw(width2) << std::setprecision(1) << std::fixed << expdCount[bucketCounter] << "\n";
@@ -118,9 +117,9 @@ void HashTable<K,D,H>::Analysis (std::ostream& os) const
 
   //check to see if there are any remaining stray theoretical values that need to be displayed
   size_t counter = maxBucketSize + 1;
-  double theoryNum = ((tableSizeDecimal - counter + 1) / ((numBucketsDecimal - 1) * counter)) * expdCount[counter-1];
-  while (theoryNum >= 0.05)
-  {
+  double theoryNum =
+          ((tableSizeDecimal - counter + 1) / ((numBucketsDecimal - 1) * counter)) * expdCount[counter - 1];
+  while (theoryNum >= 0.05) {
     os << std::setw(width0) << counter;
     os << std::setw(width1) << ' ';
     os << std::setw(width2) << std::setprecision(1) << std::fixed << theoryNum << "\n";
@@ -131,3 +130,4 @@ void HashTable<K,D,H>::Analysis (std::ostream& os) const
   os << "\n";
 
 } // Analysis
+    
